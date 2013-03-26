@@ -126,34 +126,29 @@ def breadthFirstSearch(problem):
     startState={}
     startState["position"]=problem.getStartState()
     startState["path"]=[]
-    startState["visited"]=[startState["position"]]
+    visited=[]
+    visited.append(startState["position"])
     startState["cost"]=0
     
     toProcess=util.Queue()
     toProcess.push(startState);
-  
-    best={}
-    best["cost"]=1000000
     
     while not toProcess.isEmpty():
         nextState=toProcess.pop()
         if problem.isGoalState(nextState["position"]):
-            if nextState["cost"]<best["cost"]:
-                best=nextState
+            return nextState["path"]
         else:
             toAddPath=copy.copy(problem.getSuccessors(nextState["position"]))
             while not len(toAddPath)==0:
                 newToAdd=toAddPath.pop()
-                if not (newToAdd[0] in tuple(nextState["visited"])):
+                if not (newToAdd[0] in tuple(visited)):
                     newState=copy.copy(nextState)
                     newState["position"]=copy.copy(newToAdd[0])
                     newState["path"]=copy.copy(nextState["path"])
                     newState["path"].append(newToAdd[1])
-                    newState["visited"]=copy.copy(nextState["visited"])
-                    newState["visited"].append(newToAdd[0])
+                    visited.append(newToAdd[0])
                     newState["cost"]=nextState["cost"]+newToAdd[2]
                     toProcess.push(newState)
-    return best["path"]
 
 def uniformCostSearch(problem):
     "Search the node of least total cost first. "
@@ -162,34 +157,29 @@ def uniformCostSearch(problem):
     startState={}
     startState["position"]=problem.getStartState()
     startState["path"]=[]
-    startState["visited"]=[startState["position"]]
+    visited=[]
+    visited.append(startState["position"])
     startState["cost"]=0
     
     toProcess=util.PriorityQueue()
     toProcess.push(startState, 1)
-  
-    best={}
-    best["cost"]=1000000
     
     while not toProcess.isEmpty():
         nextState=toProcess.pop()
         if problem.isGoalState(nextState["position"]):
-            if nextState["cost"]<best["cost"]:
-                best=nextState
+            return nextState["path"]
         else:
             toAddPath=copy.copy(problem.getSuccessors(nextState["position"]))
             while not len(toAddPath)==0:
                 newToAdd=toAddPath.pop()
-                if not (newToAdd[0] in tuple(nextState["visited"])):
+                if not (newToAdd[0] in tuple(visited)):
                     newState=copy.copy(nextState)
                     newState["position"]=copy.copy(newToAdd[0])
                     newState["path"]=copy.copy(nextState["path"])
                     newState["path"].append(newToAdd[1])
-                    newState["visited"]=copy.copy(nextState["visited"])
-                    newState["visited"].append(newToAdd[0])
+                    visited.append(newToAdd[0])
                     newState["cost"]=nextState["cost"]+newToAdd[2]
                     toProcess.push(newState,newToAdd[2])
-    return best["path"]
 
 def nullHeuristic(state, problem=None):
     """
@@ -201,7 +191,33 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     "Search the node that has the lowest combined cost and heuristic first."
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    startState={}
+    startState["position"]=problem.getStartState()
+    startState["path"]=[]
+    visited=[]
+    visited.append(startState["position"])
+    startState["cost"]=0
+    
+    toProcess=util.PriorityQueue()
+    toProcess.push(startState, 1)
+    
+    while not toProcess.isEmpty():
+        nextState=toProcess.pop()
+        if problem.isGoalState(nextState["position"]):
+            return nextState["path"]
+        else:
+            toAddPath=copy.copy(problem.getSuccessors(nextState["position"]))
+            while not len(toAddPath)==0:
+                newToAdd=toAddPath.pop()
+                if not (newToAdd[0] in tuple(visited)):
+                    newState=copy.copy(nextState)
+                    newState["position"]=copy.copy(newToAdd[0])
+                    newState["path"]=copy.copy(nextState["path"])
+                    newState["path"].append(newToAdd[1])
+                    visited.append(newToAdd[0])
+                    newState["cost"]=nextState["cost"]+newToAdd[2]
+                    toProcess.push(newState,newState["cost"]+heuristic(newState["position"],problem))
+
 
 
 # Abbreviations
