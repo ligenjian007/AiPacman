@@ -158,7 +158,38 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     "Search the node of least total cost first. "
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    startState={}
+    startState["position"]=problem.getStartState()
+    startState["path"]=[]
+    startState["visited"]=[startState["position"]]
+    startState["cost"]=0
+    
+    toProcess=util.PriorityQueue()
+    toProcess.push(startState, 1)
+  
+    best={}
+    best["cost"]=1000000
+    
+    while not toProcess.isEmpty():
+        nextState=toProcess.pop()
+        if problem.isGoalState(nextState["position"]):
+            if nextState["cost"]<best["cost"]:
+                best=nextState
+        else:
+            toAddPath=copy.copy(problem.getSuccessors(nextState["position"]))
+            while not len(toAddPath)==0:
+                newToAdd=toAddPath.pop()
+                if not (newToAdd[0] in tuple(nextState["visited"])):
+                    newState=copy.copy(nextState)
+                    newState["position"]=copy.copy(newToAdd[0])
+                    newState["path"]=copy.copy(nextState["path"])
+                    newState["path"].append(newToAdd[1])
+                    newState["visited"]=copy.copy(nextState["visited"])
+                    newState["visited"].append(newToAdd[0])
+                    newState["cost"]=nextState["cost"]+newToAdd[2]
+                    toProcess.push(newState,newToAdd[2])
+    return best["path"]
 
 def nullHeuristic(state, problem=None):
     """
