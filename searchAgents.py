@@ -356,11 +356,39 @@ def cornersHeuristic(state, problem):
     on the shortest path from the state to a goal of the problem; i.e.
     it should be admissible (as well as consistent).
     """
-    corners = problem.corners # These are the corner coordinates
+    corners = []
+    corners.append(problem.corners[0])
+    corners.append(problem.corners[1])
+    corners.append(problem.corners[3])
+    corners.append(problem.corners[2])
+ #   corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    lenbest=100000
+    for i in range(0,4):
+        if state[i+1]:
+            lenpath=manhattan(corners[i],state[0])
+            if state[(i-1+4)%4+1] and state[(i+1)%4+1]:
+                if manhattan(corners[(i-1+4)%4],corners[i])<manhattan(corners[(i+1)%4],corners[i]):
+                    lenpath=lenpath+2*manhattan(corners[(i-1+4)%4],corners[i])+manhattan(corners[(i+1)%4],corners[i])
+                else:
+                    lenpath=lenpath+manhattan(corners[(i-1+4)%4],corners[i])+2*manhattan(corners[(i+1)%4],corners[i])
+            else:
+                if state[(i+2)%4+1]:
+                    lenpath=lenpath+manhattan(corners[(i+2)%4],corners[i])
+                else:
+                    if state[(i+1)%4+1]:
+                        lenpath=lenpath+manhattan(corners[(i+1)%4],corners[i])
+                    if state[(i-1)%4+1]:
+                        lenpath=lenpath+manhattan(corners[(i-1)%4],corners[i])
+            if lenpath<lenbest:
+                lenbest=lenpath
+    
+    return lenbest # Default to trivial solution
+
+def manhattan(a,b):
+    return abs(a[0]-b[0])+abs(a[1]-b[1])
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
