@@ -430,6 +430,8 @@ class FoodSearchProblem:
                 nextFood = state[1].copy()
                 nextFood[nextx][nexty] = False
                 successors.append( ( ((nextx, nexty), nextFood), direction, 1) )
+        if self._expanded % 100==0:
+            print(self._expanded,"nodes expanded")
         return successors
 
     def getCostOfActions(self, actions):
@@ -477,8 +479,42 @@ def foodHeuristic(state, problem):
       problem.heuristicInfo['wallCount'] = problem.walls.count()
     Subsequent calls to this heuristic can access problem.heuristicInfo['wallCount']
     """
+    """
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
+    foods=[]
+    foodGrid[position[0]][position[1]]=True
+    for i in range(foodGrid.width):
+        for j in range(foodGrid.height):
+            if foodGrid[i][j]:
+                foods.append((i,j))
+    
+    distance={}
+    for food in foods:
+        distance[food]={}
+        for otherFood in foods:
+            if not otherFood==food:
+                distance[food][otherFood]=manhattan(food,otherFood)
+    
+    firstFood=foods.pop()
+    foodAdded=[firstFood]
+    toAddNodes=util.PriorityQueue()
+    for otherFood in foods:
+        toAddNodes.push((otherFood,distance[firstFood][otherFood]), distance[firstFood][otherFood])
+    
+    lenFoodToAdd=len(foods)
+    totalDistance=0
+    while lenFoodToAdd>0:
+        (nextNode,dis)=toAddNodes.pop()
+        while nextNode in tuple(foodAdded):
+            (nextNode,dis)=toAddNodes.pop()
+        foodAdded.append(nextNode)
+        lenFoodToAdd=lenFoodToAdd-1
+        totalDistance=totalDistance+dis
+        foods.remove(nextNode)
+        for otherFood in foods:
+            toAddNodes.push((otherFood,distance[nextNode][otherFood]), distance[nextNode][otherFood])
+    return totalDistance
+    """
     return 0
 
 class ClosestDotSearchAgent(SearchAgent):

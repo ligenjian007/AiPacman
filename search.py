@@ -201,14 +201,21 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     toProcess=util.PriorityQueue()
     toProcess.push(startState, 1)
     
+    number=0
+    
     while not toProcess.isEmpty():
         nextState=toProcess.pop()
+        price=heuristic(nextState["position"],problem)+nextState["cost"]
+ #       if not price==number:
+ #           number=price
+        print("heuristic number:",price,"passed: ",nextState["cost"])
         if problem.isGoalState(nextState["position"]):
             return nextState["path"]
         else:
             toAddPath=copy.copy(problem.getSuccessors(nextState["position"]))
             while not len(toAddPath)==0:
                 newToAdd=toAddPath.pop()
+ #               print heuristic(newToAdd[0],problem)+newToAdd[2]
                 if not (newToAdd[0] in tuple(visited)):
                     newState=copy.copy(nextState)
                     newState["position"]=copy.copy(newToAdd[0])
@@ -217,7 +224,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                     visited.append(newToAdd[0])
                     newState["cost"]=nextState["cost"]+newToAdd[2]
                     toProcess.push(newState,newState["cost"]+heuristic(newState["position"],problem))
-
+#                    print(price)
 
 
 # Abbreviations
