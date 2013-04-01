@@ -541,8 +541,16 @@ class ClosestDotSearchAgent(SearchAgent):
         food = gameState.getFood()
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
-
+        
         "*** YOUR CODE HERE ***"
+        problem.startState=startPosition
+        path=[]
+        while not problem.food.count()==0:
+            path.extend(search.bfs(problem))
+            nextPosition=(startPosition[0]-path.count('West')+path.count('East'),startPosition[1]+path.count('North')-path.count('South'))
+            problem.food[nextPosition[0]][nextPosition[1]]=False
+            problem.startState=nextPosition
+        return path
         util.raiseNotDefined()
 
 class AnyFoodSearchProblem(PositionSearchProblem):
@@ -577,10 +585,10 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         that will complete the problem definition.
         """
         x,y = state
-
+        return self.food[x][y]
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
-
+#        util.raiseNotDefined()
+    
 ##################
 # Mini-contest 1 #
 ##################
