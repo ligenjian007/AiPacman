@@ -205,10 +205,10 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     
     while not toProcess.isEmpty():
         nextState=toProcess.pop()
-        price=heuristic(nextState["position"],problem)+nextState["cost"]
+        price=heuristic(nextState["position"],problem)
  #       if not price==number:
  #           number=price
-        print("heuristic number:",price,"passed: ",nextState["cost"])
+ #       print "position",nextState["position"][0],"heuristic number:",price,"passed: ",nextState["cost"] 
         if problem.isGoalState(nextState["position"]):
             return nextState["path"]
         else:

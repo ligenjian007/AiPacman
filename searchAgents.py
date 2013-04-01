@@ -35,6 +35,7 @@ import util
 import time
 import search
 import searchAgents
+import copy
 
 class GoWestAgent(Agent):
     "An agent that goes West until it can't."
@@ -479,15 +480,14 @@ def foodHeuristic(state, problem):
       problem.heuristicInfo['wallCount'] = problem.walls.count()
     Subsequent calls to this heuristic can access problem.heuristicInfo['wallCount']
     """
-    """
+    
     position, foodGrid = state
     foods=[]
-    foodGrid[position[0]][position[1]]=True
     for i in range(foodGrid.width):
         for j in range(foodGrid.height):
             if foodGrid[i][j]:
                 foods.append((i,j))
-    
+    foods.append(position)
     distance={}
     for food in foods:
         distance[food]={}
@@ -514,7 +514,7 @@ def foodHeuristic(state, problem):
         for otherFood in foods:
             toAddNodes.push((otherFood,distance[nextNode][otherFood]), distance[nextNode][otherFood])
     return totalDistance
-    """
+    
     return 0
 
 class ClosestDotSearchAgent(SearchAgent):
